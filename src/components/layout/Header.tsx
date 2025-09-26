@@ -1,5 +1,6 @@
-import React from 'react';
-import { Globe, Bell, User, Settings, LogOut, UserCircle, Shield, Activity, Zap } from 'lucide-react';
+{ Globe, Bell, a ddac:neiacx f-pac" , xt t-bd a Y  -a3bgw ims    Noci h(i(   P -uaitr: iomrt
+  o(
+"-o(iah-aa<y,l n bl-2iLi>  < =to --mt,se R(t hu l toxnio  User, Settings, LogOut, CircleUser as UserCircle, Shield, Activity, Zap } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Button from '../ui/Button';
 import SettingsModal from '../settings/SettingsModal';
