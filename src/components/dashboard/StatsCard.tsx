@@ -28,28 +28,36 @@ const StatsCard: React.FC<StatsCardProps> = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
+    <Card className="glass hover-lift hover-glow">
+      <CardContent className="p-8">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+            <p className="text-sm font-semibold text-secondary-600 mb-2">{title}</p>
+            <p className="text-4xl font-bold gradient-text mb-2">{value}</p>
             {change && (
-              <p className="text-sm mt-2">
+              <p className="text-sm">
                 <span
                   className={
-                    change.trend === 'up' ? 'text-red-600' : 'text-green-600'
+                    change.trend === 'up' ? 'text-red-600 font-bold' : 'text-green-600 font-bold'
                   }
                 >
                   {change.trend === 'up' ? '+' : '-'}{Math.abs(change.value)}%
                 </span>{' '}
-                <span className="text-gray-500">vs last week</span>
+                <span className="text-secondary-500 font-medium">vs last week</span>
               </p>
             )}
           </div>
-          <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
-            <Icon className="w-6 h-6" />
+          <div className={`p-4 rounded-2xl shadow-lg animate-float ${colorClasses[color]}`}>
+            <Icon className="w-8 h-8 animate-pulse" />
           </div>
+        </div>
+        <div className="mt-4 progress-modern">
+          <div 
+            className="progress-fill-modern" 
+            style={{ 
+              width: typeof value === 'number' ? `${Math.min(100, (value / 100) * 100)}%` : '75%' 
+            }}
+          ></div>
         </div>
       </CardContent>
     </Card>

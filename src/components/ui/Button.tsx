@@ -19,27 +19,34 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
   
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50',
-    ghost: 'text-gray-700 hover:bg-gray-100',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
+    primary: 'btn-modern',
+    secondary: 'glass text-secondary-900 hover:bg-white/20 hover-lift',
+    outline: 'btn-outline-modern',
+    ghost: 'text-secondary-700 hover:bg-white/10 hover-glow rounded-xl',
+    danger: 'bg-gradient-to-r from-red-500 to-pink-600 text-white hover:from-red-600 hover:to-pink-700 hover-lift shadow-lg',
   };
 
   const sizes = {
-    sm: 'h-8 px-3 text-sm',
-    md: 'h-10 px-4 py-2',
-    lg: 'h-12 px-6 text-lg',
+    sm: 'h-10 px-4 text-sm font-semibold',
+    md: 'h-12 px-6 py-3 font-semibold',
+    lg: 'h-14 px-8 text-lg font-bold',
   };
 
   return (
     <button
-      className={cn(baseStyles, variants[variant], sizes[size], className)}
+      className={cn(baseStyles, variants[variant], sizes[size], 'transition-all duration-300', className)}
       disabled={disabled || loading}
       {...props}
     >
       {loading && (
-        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+        <div className="mr-3 loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      )}
+      {!loading && (
+        <svg className="mr-2 h-5 w-5 animate-spin opacity-0" fill="none" viewBox="0 0 24 24">
           <circle
             className="opacity-25"
             cx="12"
