@@ -14,11 +14,12 @@ import ResourcePlanning from './pages/ResourcePlanning';
 import MobileInterface from './pages/MobileInterface';
 
 function App() {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen bg-mesh flex flex-col relative overflow-hidden">
-          {/* Animated Background Elements */}
+        <div className="min-h-screen bg-gradient-to-br from-gray-50/50 via-white to-teal-50/30 flex flex-col relative overflow-hidden">
           <div className="particles-bg">
             <div className="particle" style={{ left: '10%', animationDelay: '0s', width: '4px', height: '4px' }}></div>
             <div className="particle" style={{ left: '20%', animationDelay: '2s', width: '6px', height: '6px' }}></div>
@@ -30,10 +31,21 @@ function App() {
             <div className="particle" style={{ left: '80%', animationDelay: '14s', width: '5px', height: '5px' }}></div>
             <div className="particle" style={{ left: '90%', animationDelay: '16s', width: '4px', height: '4px' }}></div>
           </div>
-          
+
           <Header />
-          <div className="flex-1 flex">
-            <Sidebar />
+          <div className="flex-1 flex overflow-hidden">
+            <div className="hidden lg:block">
+              <Sidebar />
+            </div>
+
+            {sidebarOpen && (
+              <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setSidebarOpen(false)}>
+                <div className="absolute left-0 top-0 bottom-0" onClick={(e) => e.stopPropagation()}>
+                  <Sidebar />
+                </div>
+              </div>
+            )}
+
             <main className="flex-1 overflow-hidden relative">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
@@ -44,15 +56,14 @@ function App() {
                 <Route path="/predictions" element={<Predictions />} />
                 <Route path="/resources" element={<ResourcePlanning />} />
                 <Route path="/mobile" element={<MobileInterface />} />
-                {/* Add more routes as needed */}
                 <Route path="*" element={<Dashboard />} />
               </Routes>
             </main>
           </div>
-          <Toaster 
+          <Toaster
             position="top-right"
             toastOptions={{
-              className: 'glass rounded-2xl shadow-2xl border border-white/20',
+              className: 'bg-white rounded-2xl shadow-2xl border border-gray-200',
               duration: 4000,
             }}
           />
