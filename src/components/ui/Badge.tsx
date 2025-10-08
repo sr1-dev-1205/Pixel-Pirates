@@ -7,17 +7,17 @@ interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Badge: React.FC<BadgeProps> = ({ className, variant = 'default', ...props }) => {
   const variants = {
-    default: 'bg-gray-100 text-gray-800 border-gray-200',
-    success: 'bg-green-100 text-green-800 border-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    danger: 'bg-red-100 text-red-800 border-red-200',
-    info: 'bg-blue-100 text-blue-800 border-blue-200',
+    default: 'bg-gradient-to-r from-secondary-100 to-secondary-200 text-secondary-800 border-secondary-200 shadow-sm',
+    success: 'bg-gradient-to-r from-emerald-100 to-green-200 text-emerald-800 border-emerald-200 shadow-sm animate-pulse',
+    warning: 'bg-gradient-to-r from-amber-100 to-yellow-200 text-amber-800 border-amber-200 shadow-sm animate-pulse',
+    danger: 'bg-gradient-to-r from-red-100 to-pink-200 text-red-800 border-red-200 shadow-sm animate-pulse',
+    info: 'bg-gradient-to-r from-blue-100 to-cyan-200 text-blue-800 border-blue-200 shadow-sm animate-pulse',
   };
 
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+        'inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold transition-all duration-300 hover-scale',
         variants[variant],
         className
       )}
