@@ -164,7 +164,7 @@ const Header: React.FC = () => {
               <User className="w-4 h-4 text-gray-600" />
             </div>
             <div className="text-sm">
-              <p className="font-medium text-gray-900">Dr. Anita Sharma</p>
+              <p className="font-medium text-gray-900">Dr. Vimanthan </p>
               <p className="text-gray-500">District Health Officer</p>
             </div>
             </button>
