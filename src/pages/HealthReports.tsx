@@ -1,13 +1,17 @@
-import React from 'react';
-import { FileText, Calendar, MapPin, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, Calendar, MapPin, User, Plus } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useMockData } from '../hooks/useMockData';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import Button from '../components/ui/Button';
 import { formatDate } from '../lib/utils';
+import HealthReportForm from '../components/health-reports/HealthReportForm';
+import PageHeader from '../components/layout/PageHeader';
 
 const HealthReports: React.FC = () => {
   const { t } = useLanguage();
-  const { healthReports, villages, loading } = useMockData();
+  const { healthReports, villages, loading, addHealthReport } = useMockData();
+  const [showForm, setShowForm] = useState(false);
 
   const getVillageName = (villageId: string) => {
     const village = villages.find(v => v.id === villageId);
@@ -28,12 +32,16 @@ const HealthReports: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{t('healthReports')}</h1>
-          <p className="text-gray-600 mt-1">
-            Daily health surveillance reports from field workers
-          </p>
-        </div>
+        <PageHeader
+          title={t('healthReports')}
+          subtitle="Daily health surveillance reports from field workers"
+          action={
+            <Button onClick={() => setShowForm(true)} className="flex items-center space-x-2">
+              <Plus className="w-4 h-4" />
+              <span>Add Health Report</span>
+            </Button>
+          }
+        />
 
         <div className="space-y-6">
           {healthReports.map((report) => (
@@ -150,6 +158,17 @@ const HealthReports: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {showForm && (
+        <HealthReportForm
+          villages={villages}
+          onSubmit={(data) => {
+            addHealthReport(data);
+            setShowForm(false);
+          }}
+          onClose={() => setShowForm(false)}
+        />
+      )}
     </div>
   );
 };

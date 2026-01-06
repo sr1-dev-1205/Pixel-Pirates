@@ -6,6 +6,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import Badge from '../components/ui/Badge';
 import PredictionChart from '../components/predictions/PredictionChart';
 
+import Skeleton from '../components/ui/Skeleton';
+import PageHeader from '../components/layout/PageHeader';
+
 const Predictions: React.FC = () => {
   const { t } = useLanguage();
   const { predictions, villages, loading } = useMockData();
@@ -23,10 +26,16 @@ const Predictions: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+      <div className="flex-1 overflow-auto p-6 space-y-6">
+        <div className="mb-6">
+          <Skeleton className="h-10 w-48 mb-2" />
+          <Skeleton className="h-5 w-96" />
+        </div>
+        <Skeleton className="h-64 rounded-lg" />
+        <div className="space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-80 rounded-lg" />
+          ))}
         </div>
       </div>
     );
@@ -35,12 +44,10 @@ const Predictions: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{t('predictions')}</h1>
-          <p className="text-gray-600 mt-1">
-            AI-powered outbreak prediction and risk assessment
-          </p>
-        </div>
+        <PageHeader
+          title={t('predictions')}
+          subtitle="AI-powered outbreak prediction and risk assessment"
+        />
 
         {/* Prediction Chart */}
         <div className="mb-6">

@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import { formatDate } from '../lib/utils';
 import WaterQualityForm from '../components/water-quality/WaterQualityForm';
+import PageHeader from '../components/layout/PageHeader';
 
 const WaterQuality: React.FC = () => {
   const { t } = useLanguage();
@@ -44,18 +45,16 @@ const WaterQuality: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{t('waterQuality')}</h1>
-            <p className="text-gray-600 mt-1">
-              Monitor water source quality and contamination levels
-            </p>
-          </div>
-          <Button onClick={() => setShowForm(true)} className="flex items-center space-x-2">
-            <Plus className="w-4 h-4" />
-            <span>Add Water Test</span>
-          </Button>
-        </div>
+        <PageHeader
+          title={t('waterQuality')}
+          subtitle="Monitor water source quality and contamination levels"
+          action={
+            <Button onClick={() => setShowForm(true)} className="flex items-center space-x-2">
+              <Plus className="w-4 h-4" />
+              <span>Add Water Test</span>
+            </Button>
+          }
+        />
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
@@ -70,7 +69,7 @@ const WaterQuality: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -168,16 +167,15 @@ const WaterQuality: React.FC = () => {
                           {report.ph_level}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {report.ph_level < 6.5 || report.ph_level > 8.5 ? 
+                          {report.ph_level < 6.5 || report.ph_level > 8.5 ?
                             <span className="text-red-600">Outside safe range</span> :
                             <span className="text-green-600">Within safe range</span>
                           }
                         </div>
                         <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
-                              report.ph_level < 6.5 || report.ph_level > 8.5 ? 'bg-red-500' : 'bg-green-500'
-                            }`}
+                            className={`h-2 rounded-full ${report.ph_level < 6.5 || report.ph_level > 8.5 ? 'bg-red-500' : 'bg-green-500'
+                              }`}
                             style={{ width: `${Math.min(100, (report.ph_level / 14) * 100)}%` }}
                           ></div>
                         </div>
@@ -192,16 +190,15 @@ const WaterQuality: React.FC = () => {
                           {report.turbidity}
                         </div>
                         <div className="text-sm text-gray-600">
-                          {report.turbidity > 10 ? 
+                          {report.turbidity > 10 ?
                             <span className="text-red-600">High turbidity</span> :
                             <span className="text-green-600">Acceptable</span>
                           }
                         </div>
                         <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className={`h-2 rounded-full ${
-                              report.turbidity > 10 ? 'bg-red-500' : 'bg-green-500'
-                            }`}
+                            className={`h-2 rounded-full ${report.turbidity > 10 ? 'bg-red-500' : 'bg-green-500'
+                              }`}
                             style={{ width: `${Math.min(100, (report.turbidity / 20) * 100)}%` }}
                           ></div>
                         </div>
@@ -214,17 +211,15 @@ const WaterQuality: React.FC = () => {
                       <div className="space-y-2">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600">Chlorine Level</span>
-                          <span className={`font-medium ${
-                            report.chlorine_level < 0.2 ? 'text-red-600' : 'text-green-600'
-                          }`}>
+                          <span className={`font-medium ${report.chlorine_level < 0.2 ? 'text-red-600' : 'text-green-600'
+                            }`}>
                             {report.chlorine_level} mg/L
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600">Bacterial Presence</span>
-                          <span className={`font-medium ${
-                            report.bacterial_presence ? 'text-red-600' : 'text-green-600'
-                          }`}>
+                          <span className={`font-medium ${report.bacterial_presence ? 'text-red-600' : 'text-green-600'
+                            }`}>
                             {report.bacterial_presence ? 'Detected' : 'Not Detected'}
                           </span>
                         </div>
@@ -235,25 +230,22 @@ const WaterQuality: React.FC = () => {
                   {/* Recommendations */}
                   <div className="mt-6 pt-4 border-t">
                     <h4 className="font-medium text-gray-900 mb-2">Recommendations</h4>
-                    <div className={`p-3 rounded-lg ${
-                      qualityStatus.status === 'unsafe' ? 'bg-red-50 border-l-4 border-red-500' :
+                    <div className={`p-3 rounded-lg ${qualityStatus.status === 'unsafe' ? 'bg-red-50 border-l-4 border-red-500' :
                       qualityStatus.status === 'caution' ? 'bg-yellow-50 border-l-4 border-yellow-500' :
-                      'bg-green-50 border-l-4 border-green-500'
-                    }`}>
-                      <div className={`text-sm font-medium ${
-                        qualityStatus.status === 'unsafe' ? 'text-red-800' :
-                        qualityStatus.status === 'caution' ? 'text-yellow-800' :
-                        'text-green-800'
+                        'bg-green-50 border-l-4 border-green-500'
                       }`}>
+                      <div className={`text-sm font-medium ${qualityStatus.status === 'unsafe' ? 'text-red-800' :
+                        qualityStatus.status === 'caution' ? 'text-yellow-800' :
+                          'text-green-800'
+                        }`}>
                         {qualityStatus.status === 'unsafe' && 'Immediate Action Required:'}
                         {qualityStatus.status === 'caution' && 'Monitor Closely:'}
                         {qualityStatus.status === 'safe' && 'Water Source Safe:'}
                       </div>
-                      <ul className={`text-xs mt-1 space-y-1 ${
-                        qualityStatus.status === 'unsafe' ? 'text-red-700' :
+                      <ul className={`text-xs mt-1 space-y-1 ${qualityStatus.status === 'unsafe' ? 'text-red-700' :
                         qualityStatus.status === 'caution' ? 'text-yellow-700' :
-                        'text-green-700'
-                      }`}>
+                          'text-green-700'
+                        }`}>
                         {qualityStatus.status === 'unsafe' && (
                           <>
                             <li>• Stop using this water source immediately</li>

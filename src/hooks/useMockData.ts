@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Village, HealthReport, WaterQualityReport, Alert, PredictionData, DashboardStats } from '../types';
+import { calculateVillageRisk } from '../lib/riskEngine';
 
-// Mock data generation
+// Mock data generation (keep initial generators for seeding data)
 const generateMockVillages = (): Village[] => [
   {
     id: '1',
@@ -68,6 +69,16 @@ const generateMockHealthReports = (): HealthReport[] => [
   },
   {
     id: '2',
+    name: 'Majuli-Past', // Extra historical report
+    village_id: '1',
+    reporter_id: 'asha_1',
+    report_date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+    symptoms: { diarrhea: 10, fever: 15, vomiting: 5, dehydration: 2 },
+    total_cases: 32,
+    created_at: new Date(Date.now() - 86400000).toISOString(),
+  } as any, // casting for quick mock fix
+  {
+    id: '3',
     village_id: '2',
     reporter_id: 'asha_2',
     report_date: new Date().toISOString().split('T')[0],
@@ -77,7 +88,7 @@ const generateMockHealthReports = (): HealthReport[] => [
     created_at: new Date(Date.now() - 3600000).toISOString(),
   },
   {
-    id: '3',
+    id: '4',
     village_id: '5',
     reporter_id: 'asha_3',
     report_date: new Date().toISOString().split('T')[0],
@@ -174,37 +185,6 @@ const generateMockAlerts = (): Alert[] => [
   },
 ];
 
-const generateMockPredictions = (): PredictionData[] => [
-  {
-    village_id: '1',
-    prediction_date: new Date().toISOString(),
-    outbreak_probability: 0.85,
-    risk_factors: {
-      water_quality_score: 0.9,
-      symptom_trend_score: 0.8,
-      seasonal_score: 0.7,
-      population_density_score: 0.6,
-    },
-    confidence_level: 0.92,
-    next_7_days: [0.85, 0.82, 0.78, 0.75, 0.72, 0.68, 0.65],
-    next_14_days: [0.85, 0.82, 0.78, 0.75, 0.72, 0.68, 0.65, 0.62, 0.58, 0.55, 0.52, 0.48, 0.45, 0.42],
-  },
-  {
-    village_id: '5',
-    prediction_date: new Date().toISOString(),
-    outbreak_probability: 0.76,
-    risk_factors: {
-      water_quality_score: 0.85,
-      symptom_trend_score: 0.7,
-      seasonal_score: 0.6,
-      population_density_score: 0.5,
-    },
-    confidence_level: 0.88,
-    next_7_days: [0.76, 0.73, 0.70, 0.67, 0.64, 0.61, 0.58],
-    next_14_days: [0.76, 0.73, 0.70, 0.67, 0.64, 0.61, 0.58, 0.55, 0.52, 0.49, 0.46, 0.43, 0.40, 0.37],
-  },
-];
-
 const generateDashboardStats = (
   villages: Village[],
   healthReports: HealthReport[],
@@ -233,29 +213,91 @@ export function useMockData() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Initial Data Load
   useEffect(() => {
-    // Simulate API loading delay
     const loadData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate simplified network delay
+
       const mockVillages = generateMockVillages();
       const mockHealthReports = generateMockHealthReports();
       const mockWaterReports = generateMockWaterReports();
       const mockAlerts = generateMockAlerts();
-      const mockPredictions = generateMockPredictions();
-      const mockStats = generateDashboardStats(mockVillages, mockHealthReports, mockAlerts);
 
       setVillages(mockVillages);
       setHealthReports(mockHealthReports);
       setWaterReports(mockWaterReports);
       setAlerts(mockAlerts);
-      setPredictions(mockPredictions);
-      setDashboardStats(mockStats);
       setLoading(false);
     };
 
     loadData();
   }, []);
+
+  // Recalculate predictions and stats whenever data changes
+  useEffect(() => {
+    if (villages.length === 0) return;
+
+    // 1. Calculate Predictions
+    const newPredictions = villages.map(village =>
+      calculateVillageRisk(village.id, healthReports, waterReports)
+    );
+    setPredictions(newPredictions);
+
+    // 2. Update Village Risk Levels
+    const updatedVillages = villages.map(village => {
+      const pred = newPredictions.find(p => p.village_id === village.id);
+      let newRisk: 'low' | 'medium' | 'high' = 'low';
+      if (pred) {
+        if (pred.outbreak_probability >= 0.7) newRisk = 'high';
+        else if (pred.outbreak_probability >= 0.4) newRisk = 'medium';
+      }
+      return { ...village, risk_level: newRisk };
+    });
+
+    // Check if risk levels actually changed to avoid infinite loops if we were setting villages directly
+    // But here we can't easily setVillages inside this effect if 'villages' is a dependency.
+    // So we'll update stats instead, and perhaps rely on dashboard stats for UI.
+    // IMPORTANT: To properly update village risk levels in the UI without infinite loops, 
+    // we would need a more complex state management.
+    // For now, let's just update the Dashboard stats based on the *calculated* risk, 
+    // and rely on the predictions array for looking up risk in other components if needed.
+    // OR: We check JSON.stringify to see if we really need to update villages.
+
+    // Let's take a simpler approach: We won't update 'villages' state here to avoid loops.
+    // Instead we compute derived stats.
+
+    const derivedStats = generateDashboardStats(updatedVillages, healthReports, alerts);
+    setDashboardStats(derivedStats);
+
+  }, [healthReports, waterReports, alerts, villages.length]);
+  // removed `villages` from dependency to avoid loop if we were updating it, 
+  // but strictly we should probably update villages. 
+
+  // A safe way to update village risk levels without loops:
+  useEffect(() => {
+    if (villages.length === 0 || predictions.length === 0) return;
+
+    let changed = false;
+    const updatedVillages = villages.map(village => {
+      const pred = predictions.find(p => p.village_id === village.id);
+      if (!pred) return village;
+
+      let newRisk: 'low' | 'medium' | 'high' = 'low';
+      if (pred.outbreak_probability >= 0.7) newRisk = 'high';
+      else if (pred.outbreak_probability >= 0.4) newRisk = 'medium';
+
+      if (village.risk_level !== newRisk) {
+        changed = true;
+        return { ...village, risk_level: newRisk };
+      }
+      return village;
+    });
+
+    if (changed) {
+      setVillages(updatedVillages);
+    }
+  }, [predictions]); // Only run when predictions update
+
 
   return {
     villages,
@@ -275,7 +317,7 @@ export function useMockData() {
       setHealthReports(prev => [newReport, ...prev]);
     },
     acknowledgeAlert: (alertId: string) => {
-      setAlerts(prev => prev.map(alert => 
+      setAlerts(prev => prev.map(alert =>
         alert.id === alertId ? { ...alert, acknowledged: true } : alert
       ));
     },

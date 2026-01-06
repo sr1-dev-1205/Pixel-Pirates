@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { AlertTriangle, Clock, CheckCircle, Bell, MapPin, Calendar, Filter } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useMockData } from '../hooks/useMockData';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import { formatDateTime } from '../lib/utils';
 import { Alert } from '../types';
+import PageHeader from '../components/layout/PageHeader';
 
 const Alerts: React.FC = () => {
   const { t, language } = useLanguage();
@@ -73,12 +74,10 @@ const Alerts: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{t('alerts')}</h1>
-          <p className="text-gray-600 mt-1">
-            Monitor and manage health alerts across all villages
-          </p>
-        </div>
+        <PageHeader
+          title={t('alerts')}
+          subtitle="Monitor and manage health alerts across all villages"
+        />
 
         {/* Alert Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
@@ -93,7 +92,7 @@ const Alerts: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -147,7 +146,7 @@ const Alerts: React.FC = () => {
                 <Filter className="w-4 h-4 text-gray-500" />
                 <span className="text-sm font-medium text-gray-700">Filters:</span>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Status:</span>
                 <select
@@ -191,9 +190,9 @@ const Alerts: React.FC = () => {
                 <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Alerts Found</h3>
                 <p className="text-gray-600">
-                  {filter === 'active' ? 'No active alerts at this time.' : 
-                   filter === 'acknowledged' ? 'No acknowledged alerts found.' :
-                   'No alerts match the current filters.'}
+                  {filter === 'active' ? 'No active alerts at this time.' :
+                    filter === 'acknowledged' ? 'No acknowledged alerts found.' :
+                      'No alerts match the current filters.'}
                 </p>
               </CardContent>
             </Card>
@@ -201,13 +200,11 @@ const Alerts: React.FC = () => {
             filteredAlerts.map((alert) => (
               <Card
                 key={alert.id}
-                className={`hover:shadow-lg transition-shadow ${
-                  alert.acknowledged ? 'opacity-75' : ''
-                } ${
-                  alert.severity === 'critical' ? 'border-l-4 border-red-500' :
-                  alert.severity === 'high' ? 'border-l-4 border-yellow-500' :
-                  'border-l-4 border-blue-500'
-                }`}
+                className={`hover:shadow-lg transition-shadow ${alert.acknowledged ? 'opacity-75' : ''
+                  } ${alert.severity === 'critical' ? 'border-l-4 border-red-500' :
+                    alert.severity === 'high' ? 'border-l-4 border-yellow-500' :
+                      'border-l-4 border-blue-500'
+                  }`}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -273,7 +270,7 @@ const Alerts: React.FC = () => {
                           Acknowledge
                         </Button>
                       )}
-                      
+
                       <Button
                         size="sm"
                         variant="outline"
@@ -287,16 +284,14 @@ const Alerts: React.FC = () => {
                   {/* Action Recommendations */}
                   <div className="mt-4 pt-4 border-t">
                     <h4 className="font-medium text-gray-900 mb-2">Recommended Actions</h4>
-                    <div className={`p-3 rounded-lg ${
-                      alert.severity === 'critical' ? 'bg-red-50' :
+                    <div className={`p-3 rounded-lg ${alert.severity === 'critical' ? 'bg-red-50' :
                       alert.severity === 'high' ? 'bg-yellow-50' :
-                      'bg-blue-50'
-                    }`}>
-                      <ul className={`text-sm space-y-1 ${
-                        alert.severity === 'critical' ? 'text-red-700' :
-                        alert.severity === 'high' ? 'text-yellow-700' :
-                        'text-blue-700'
+                        'bg-blue-50'
                       }`}>
+                      <ul className={`text-sm space-y-1 ${alert.severity === 'critical' ? 'text-red-700' :
+                        alert.severity === 'high' ? 'text-yellow-700' :
+                          'text-blue-700'
+                        }`}>
                         {alert.alert_type === 'outbreak_risk' && (
                           <>
                             <li>• Deploy medical team to affected area</li>

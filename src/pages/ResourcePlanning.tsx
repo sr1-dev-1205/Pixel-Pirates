@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  Package, 
-  Truck, 
-  Users, 
-  MapPin, 
-  Calendar, 
-  Plus, 
-  AlertTriangle, 
+import {
+  Package,
+  Truck,
+  Users,
+  MapPin,
+  Calendar,
+  Plus,
+  AlertTriangle,
   TrendingUp,
   Clock,
   CheckCircle,
@@ -27,6 +27,7 @@ import { useMockData } from '../hooks/useMockData';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import PageHeader from '../components/layout/PageHeader';
 
 interface Resource {
   id: string;
@@ -277,12 +278,10 @@ const ResourcePlanning: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Resource Planning & Management</h1>
-          <p className="text-gray-600 mt-1">
-            Comprehensive resource management for health emergency response
-          </p>
-        </div>
+        <PageHeader
+          title={t('resources')}
+          subtitle="Comprehensive resource management for health emergency response"
+        />
 
         {/* Tab Navigation */}
         <div className="mb-6">
@@ -300,11 +299,10 @@ const ResourcePlanning: React.FC = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
+                    className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{tab.name}</span>
@@ -366,7 +364,7 @@ const ResourcePlanning: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -428,9 +426,9 @@ const ResourcePlanning: React.FC = () => {
                           </Button>
                         </div>
                       </div>
-                      
+
                       <h3 className="font-semibold text-gray-900 mb-2">{resource.name}</h3>
-                      
+
                       <div className="space-y-2 mb-4">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Current Stock:</span>
@@ -460,13 +458,12 @@ const ResourcePlanning: React.FC = () => {
 
                       <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                         <div
-                          className={`h-2 rounded-full ${
-                            stockStatus.status === 'out_of_stock' ? 'bg-red-500' :
+                          className={`h-2 rounded-full ${stockStatus.status === 'out_of_stock' ? 'bg-red-500' :
                             stockStatus.status === 'critical' ? 'bg-red-500' :
-                            stockStatus.status === 'low' ? 'bg-yellow-500' :
-                            stockStatus.status === 'adequate' ? 'bg-blue-500' :
-                            'bg-green-500'
-                          }`}
+                              stockStatus.status === 'low' ? 'bg-yellow-500' :
+                                stockStatus.status === 'adequate' ? 'bg-blue-500' :
+                                  'bg-green-500'
+                            }`}
                           style={{
                             width: `${Math.min(100, (resource.current_stock / resource.required_stock) * 100)}%`,
                           }}
@@ -498,7 +495,7 @@ const ResourcePlanning: React.FC = () => {
         {activeTab === 'analytics' && (
           <div className="space-y-6">
             <h2 className="text-xl font-semibold text-gray-900">Resource Analytics & Insights</h2>
-            
+
             {/* Analytics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
@@ -611,16 +608,16 @@ const ResourcePlanning: React.FC = () => {
                       <Badge
                         variant={
                           kit.status === 'ready' ? 'success' :
-                          kit.status === 'deployed' ? 'warning' :
-                          'default'
+                            kit.status === 'deployed' ? 'warning' :
+                              'default'
                         }
                       >
                         {kit.status.toUpperCase()}
                       </Badge>
                     </div>
-                    
+
                     <h3 className="font-semibold text-gray-900 mb-3">{kit.name}</h3>
-                    
+
                     <div className="space-y-2 mb-4">
                       <div className="text-sm font-medium text-gray-700">Contents:</div>
                       <ul className="text-xs text-gray-600 space-y-1">
@@ -702,8 +699,8 @@ const ResourcePlanning: React.FC = () => {
                         <Badge
                           variant={
                             deployment.priority === 'critical' ? 'danger' :
-                            deployment.priority === 'high' ? 'warning' :
-                            'info'
+                              deployment.priority === 'high' ? 'warning' :
+                                'info'
                           }
                         >
                           {deployment.priority.toUpperCase()}
@@ -712,16 +709,16 @@ const ResourcePlanning: React.FC = () => {
                       <Badge
                         variant={
                           deployment.status === 'completed' ? 'success' :
-                          deployment.status === 'deployed' ? 'info' :
-                          deployment.status === 'in_transit' ? 'warning' :
-                          deployment.status === 'cancelled' ? 'danger' :
-                          'default'
+                            deployment.status === 'deployed' ? 'info' :
+                              deployment.status === 'in_transit' ? 'warning' :
+                                deployment.status === 'cancelled' ? 'danger' :
+                                  'default'
                         }
                       >
                         {deployment.status.replace('_', ' ').toUpperCase()}
                       </Badge>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-4">
                       <div>
                         <span className="text-gray-600">Destination:</span>
@@ -767,24 +764,23 @@ const ResourcePlanning: React.FC = () => {
                         <span>Progress</span>
                         <span>
                           {deployment.status === 'planned' ? '0%' :
-                           deployment.status === 'in_transit' ? '50%' :
-                           deployment.status === 'deployed' ? '75%' :
-                           deployment.status === 'completed' ? '100%' : '0%'}
+                            deployment.status === 'in_transit' ? '50%' :
+                              deployment.status === 'deployed' ? '75%' :
+                                deployment.status === 'completed' ? '100%' : '0%'}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
-                            deployment.status === 'completed' ? 'bg-green-500' :
+                          className={`h-2 rounded-full ${deployment.status === 'completed' ? 'bg-green-500' :
                             deployment.status === 'deployed' ? 'bg-blue-500' :
-                            deployment.status === 'in_transit' ? 'bg-yellow-500' :
-                            'bg-gray-400'
-                          }`}
+                              deployment.status === 'in_transit' ? 'bg-yellow-500' :
+                                'bg-gray-400'
+                            }`}
                           style={{
                             width: deployment.status === 'planned' ? '0%' :
-                                   deployment.status === 'in_transit' ? '50%' :
-                                   deployment.status === 'deployed' ? '75%' :
-                                   deployment.status === 'completed' ? '100%' : '0%'
+                              deployment.status === 'in_transit' ? '50%' :
+                                deployment.status === 'deployed' ? '75%' :
+                                  deployment.status === 'completed' ? '100%' : '0%'
                           }}
                         ></div>
                       </div>
@@ -800,7 +796,7 @@ const ResourcePlanning: React.FC = () => {
         {activeTab === 'planning' && (
           <div className="space-y-6">
             <h2 className="text-xl font-semibold text-gray-900">Strategic Resource Planning</h2>
-            
+
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Button className="p-4 h-auto flex flex-col items-center space-y-2">
@@ -820,7 +816,7 @@ const ResourcePlanning: React.FC = () => {
                 <span>Export Plan</span>
               </Button>
             </div>
-            
+
             {/* High Priority Villages */}
             <Card>
               <CardHeader>
@@ -880,7 +876,7 @@ const ResourcePlanning: React.FC = () => {
                     <tbody>
                       {villages.slice(0, 5).map(village => {
                         const estimatedCost = village.risk_level === 'high' ? 50000 :
-                                            village.risk_level === 'medium' ? 25000 : 10000;
+                          village.risk_level === 'medium' ? 25000 : 10000;
                         return (
                           <tr key={village.id} className="border-b">
                             <td className="py-3 font-medium">{village.name}</td>
@@ -888,8 +884,8 @@ const ResourcePlanning: React.FC = () => {
                               <Badge
                                 variant={
                                   village.risk_level === 'high' ? 'danger' :
-                                  village.risk_level === 'medium' ? 'warning' :
-                                  'success'
+                                    village.risk_level === 'medium' ? 'warning' :
+                                      'success'
                                 }
                               >
                                 {village.risk_level}
@@ -898,18 +894,18 @@ const ResourcePlanning: React.FC = () => {
                             <td className="py-3">{village.population.toLocaleString()}</td>
                             <td className="py-3">
                               {village.risk_level === 'high' ? '2 needed' :
-                               village.risk_level === 'medium' ? '1 needed' :
-                               'Adequate'}
+                                village.risk_level === 'medium' ? '1 needed' :
+                                  'Adequate'}
                             </td>
                             <td className="py-3">
                               {village.risk_level === 'high' ? '500 ORS' :
-                               village.risk_level === 'medium' ? '200 ORS' :
-                               'Standard stock'}
+                                village.risk_level === 'medium' ? '200 ORS' :
+                                  'Standard stock'}
                             </td>
                             <td className="py-3">
                               {village.risk_level === 'high' ? '2 test kits' :
-                               village.risk_level === 'medium' ? '1 test kit' :
-                               'Adequate'}
+                                village.risk_level === 'medium' ? '1 test kit' :
+                                  'Adequate'}
                             </td>
                             <td className="py-3 font-medium">₹{estimatedCost.toLocaleString()}</td>
                             <td className="py-3">

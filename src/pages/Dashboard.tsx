@@ -7,24 +7,43 @@ import RiskMap from '../components/dashboard/RiskMap';
 import RecentAlerts from '../components/dashboard/RecentAlerts';
 import TrendChart from '../components/dashboard/TrendChart';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import HealthIntelligenceSummary from '../components/dashboard/HealthIntelligenceSummary';
+import PageHeader from '../components/layout/PageHeader';
+import Skeleton from '../components/ui/Skeleton';
 
 const Dashboard: React.FC = () => {
   const { t } = useLanguage();
-  const { 
-    villages, 
-    healthReports, 
-    alerts, 
-    dashboardStats, 
-    loading, 
-    acknowledgeAlert 
+  const {
+    villages,
+    healthReports,
+    alerts,
+    predictions,
+    dashboardStats,
+    loading,
+    acknowledgeAlert
   } = useMockData();
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+      <div className="flex-1 overflow-auto p-6 space-y-6">
+        <div className="mb-6">
+          <Skeleton className="h-10 w-64 mb-2" />
+          <Skeleton className="h-5 w-96" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-lg" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <Skeleton className="lg:col-span-2 h-96 rounded-lg" />
+          <Skeleton className="h-96 rounded-lg" />
+        </div>
+        <Skeleton className="h-80 rounded-lg mb-6" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-48 rounded-lg" />
+          ))}
         </div>
       </div>
     );
@@ -34,12 +53,10 @@ const Dashboard: React.FC = () => {
     <div className="flex-1 overflow-auto">
       <div className="p-6">
         {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{t('dashboard')}</h1>
-          <p className="text-gray-600 mt-1">
-            Real-time health monitoring for Northeast India
-          </p>
-        </div>
+        <PageHeader
+          title={t('dashboard')}
+          subtitle="Real-time public health surveillance & decision support system"
+        />
 
         {/* Stats Cards */}
         {dashboardStats && (
@@ -75,7 +92,15 @@ const Dashboard: React.FC = () => {
               color="red"
             />
           </div>
+
         )}
+
+        {/* Health Intelligence Layer */}
+        <HealthIntelligenceSummary
+          villages={villages}
+          predictions={predictions}
+          alerts={alerts}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Risk Map */}

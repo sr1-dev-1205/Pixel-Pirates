@@ -4,10 +4,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useMockData } from '../hooks/useMockData';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
+import PageHeader from '../components/layout/PageHeader';
 
 const MobileInterface: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const { villages, addHealthReport } = useMockData();
   const [isOnline, setIsOnline] = useState(true);
   const [pendingReports, setPendingReports] = useState(2);
@@ -32,7 +32,7 @@ const MobileInterface: React.FC = () => {
       total_cases: Math.floor(Math.random() * 30) + 5,
       notes: 'Submitted via mobile app',
     };
-    
+
     addHealthReport(mockReport);
     if (!isOnline) {
       setPendingReports(prev => prev + 1);
@@ -47,12 +47,10 @@ const MobileInterface: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Mobile App Interface</h1>
-          <p className="text-gray-600 mt-1">
-            ASHA Worker mobile app simulation for field data collection
-          </p>
-        </div>
+        <PageHeader
+          title="Mobile App Interface"
+          subtitle="ASHA Worker mobile app simulation for field data collection"
+        />
 
         {/* Development Status Banner */}
         <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
@@ -124,9 +122,8 @@ const MobileInterface: React.FC = () => {
               </div>
 
               {/* Connection Status */}
-              <div className={`px-4 py-2 text-center text-sm ${
-                isOnline ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
-              }`}>
+              <div className={`px-4 py-2 text-center text-sm ${isOnline ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+                }`}>
                 {isOnline ? (
                   <span>✓ Connected - Data syncing automatically</span>
                 ) : (
@@ -167,20 +164,18 @@ const MobileInterface: React.FC = () => {
                   <h3 className="font-semibold text-gray-900 mb-3">Language / ভাষা</h3>
                   <div className="flex bg-gray-100 rounded-lg p-1">
                     <button
-                      className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
-                        language === 'en'
-                          ? 'bg-white text-blue-600 shadow-sm'
-                          : 'text-gray-600'
-                      }`}
+                      className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${language === 'en'
+                        ? 'bg-white text-blue-600 shadow-sm'
+                        : 'text-gray-600'
+                        }`}
                     >
                       English
                     </button>
                     <button
-                      className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
-                        language === 'as'
-                          ? 'bg-white text-blue-600 shadow-sm'
-                          : 'text-gray-600'
-                      }`}
+                      className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-colors ${language === 'as'
+                        ? 'bg-white text-blue-600 shadow-sm'
+                        : 'text-gray-600'
+                        }`}
                     >
                       অসমীয়া
                     </button>
@@ -255,7 +250,7 @@ const MobileInterface: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Data can be collected without internet connection. Reports are stored locally 
+                Data can be collected without internet connection. Reports are stored locally
                 and automatically synced when connectivity is restored.
               </p>
             </CardContent>
@@ -270,7 +265,7 @@ const MobileInterface: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Built-in AI assistant helps ASHA workers with health guidance, 
+                Built-in AI assistant helps ASHA workers with health guidance,
                 symptom assessment, and community education messaging.
               </p>
             </CardContent>
@@ -285,7 +280,7 @@ const MobileInterface: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Icon-based navigation designed for users with varying literacy levels. 
+                Icon-based navigation designed for users with varying literacy levels.
                 Large buttons and clear visual indicators for easy use.
               </p>
             </CardContent>

@@ -1,299 +1,113 @@
-# Smart Community Health Monitoring System
+# AarogyaJal – Smart Community Health Monitoring & Early Warning System
 
-A comprehensive Smart Community Health Monitoring & Early Warning System designed for rural Northeast India to detect, predict, and alert about potential water-borne disease outbreaks using AI/ML models and community health data.
+> **Final Year Project** | **Status: Production-Ready Candidate**
 
-## 🎯 Features
-
-### Core Functionality
-- **Real-time Dashboard** - Overview of health status across all villages
-- **Interactive Risk Map** - Village heatmaps showing outbreak risk levels
-- **Health Reports Management** - Daily symptom tracking and case reporting
-- **Water Quality Monitoring** - Track water source contamination levels
-- **AI-Powered Predictions** - 7-14 day outbreak probability forecasting
-- **Alert Management System** - Comprehensive alert tracking and acknowledgment
-- **Resource Planning** - Medical resource allocation and deployment tracking
-- **Mobile App Interface** - Offline-first mobile app simulation for ASHA workers
-- **Multi-language Support** - English and Assamese interface
-- **SMS Alert System** - Automated notifications for high-risk situations
-
-### Technical Features
-- **Responsive Design** - Works on desktop, tablet, and mobile devices
-- **Role-based Access** - Different views for health workers vs officials
-- **Real-time Updates** - Live data synchronization
-- **Data Visualization** - Charts, graphs, and interactive maps
-- **Offline-first Architecture** - Mobile app works without internet connectivity
-- **Export Capabilities** - Generate reports for authorities
-
-## 🏗️ Architecture
-
-### Frontend
-- **React 18** with TypeScript
-- **Tailwind CSS** for styling
-- **React Router** for navigation
-- **Recharts** for data visualization
-- **Simplified Map Visualization** for village risk display
-- **React Hook Form** for form management
-
-### Backend (Simulated)
-- **Supabase** integration ready
-- **Mock data** for demonstration
-- **REST API** structure
-- **Real-time subscriptions** capability
-
-### Database Schema
-```sql
--- Core tables
-- users (ASHA workers, health officials)
-- villages (geographic and demographic data)
-- health_reports (daily symptom tracking)
-- water_quality_reports (manual/sensor data)
-- alerts (system notifications)
-- ai_predictions (ML model outputs)
-- resource_inventory (medical supplies, equipment)
-- deployments (resource allocation tracking)
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
-1. Clone the repository
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-### Environment Setup
-For full functionality with Supabase:
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
-```
-
-## 📱 System Components
-
-### 1. Web Dashboard (Current Implementation)
-- **Dashboard**: Real-time overview with key metrics and village risk map
-- **Villages**: Detailed village information with risk assessments
-- **Health Reports**: Daily symptom tracking and case management
-- **Water Quality**: Water source testing and contamination monitoring
-- **Alerts**: Alert management with acknowledgment system
-- **AI Predictions**: ML-powered outbreak forecasting with confidence levels
-- **Resource Planning**: Medical resource inventory and deployment tracking
-- **Mobile Interface**: Simulation of ASHA worker mobile app
-
-### 2. Mobile App Features (Simulated)
-- **Offline-first Design**: Data collection without internet connectivity
-- **Health Data Entry**: Simple forms for symptom and case reporting
-- **Water Test Reporting**: Upload manual test kit results
-- **AI Chat Assistant**: Guidance for health workers
-- **Multi-language Support**: English and Assamese interface
-- **Auto-sync**: Automatic data synchronization when online
-
-### 3. AI/ML Prediction Engine (Mock Implementation)
-- **Risk Assessment**: Multi-factor analysis including water quality, symptoms, seasonal patterns
-- **Outbreak Probability**: 7-14 day forecasting with confidence levels
-- **Anomaly Detection**: Unusual pattern identification
-- **Recommendation Engine**: Automated action suggestions based on risk levels
-
-## 📊 Data Models
-
-### Health Report
-```typescript
-{
-  village_id: string;
-  symptoms: {
-    diarrhea: number;
-    fever: number;
-    vomiting: number;
-    dehydration: number;
-  };
-  total_cases: number;
-  report_date: string;
-}
-```
-
-### Water Quality Report
-```typescript
-{
-  village_id: string;
-  ph_level: number;
-  turbidity: number;
-  chlorine_level: number;
-  bacterial_presence: boolean;
-  source_type: 'well' | 'borehole' | 'surface' | 'piped';
-}
-```
-
-### AI Prediction
-```typescript
-{
-  village_id: string;
-  outbreak_probability: number;
-  risk_factors: {
-    water_quality_score: number;
-    symptom_trend_score: number;
-    seasonal_score: number;
-    population_density_score: number;
-  };
-  next_7_days: number[];
-  next_14_days: number[];
-}
-```
-
-### Resource Inventory
-```typescript
-{
-  id: string;
-  name: string;
-  type: 'medicine' | 'equipment' | 'personnel' | 'supplies';
-  current_stock: number;
-  required_stock: number;
-  location: string;
-}
-```
-
-## 🔒 Security Features
-
-- **Role-based Access Control** - Different permissions for different user types
-- **Data Encryption** - All sensitive data encrypted in transit and at rest
-- **Privacy Compliance** - GDPR/HIPAA-style data protection
-- **Audit Logging** - Track all data access and modifications
-
-## 🌍 Multilingual Support
-
-Currently supports:
-- **English** - Primary interface language
-- **Assamese** - Local language for Northeast India
-
-Easy to extend for additional languages by updating the translations object.
-
-## 📱 Mobile App Architecture
-
-### Offline-First Design
-- **Local Storage**: SQLite database for offline data storage
-- **Sync Engine**: Automatic synchronization when connectivity is restored
-- **Conflict Resolution**: Smart merging of offline and online data
-- **Background Sync**: Periodic data synchronization in background
-
-### Key Mobile Features
-- **Simple UI**: Icon-based navigation for low-literacy users
-- **Voice Input**: Audio recording for notes and reports
-- **Photo Capture**: Image documentation of health conditions
-- **GPS Integration**: Automatic location tagging
-- **Push Notifications**: Real-time alerts and reminders
-
-
-## 🤖 AI/ML Integration
-
-The system includes comprehensive AI prediction capabilities:
-
-### Prediction Models
-- **Time-series Analysis** - Trend detection in health data
-- **Risk Scoring** - Multi-factor risk assessment
-- **Outbreak Prediction** - Probabilistic forecasting
-- **Anomaly Detection** - Unusual pattern identification
-- **Resource Optimization** - Smart allocation recommendations
-- **Early Warning System** - Automated alert generation
-
-### Data Sources
-- Community health reports (symptoms, case counts)
-- Water quality parameters (pH, turbidity, bacterial presence)
-- Seasonal and weather data
-- Population density and demographics
-- Historical outbreak patterns
-## 📈 Monitoring & Analytics
-
-Built-in analytics for:
-- Disease trend tracking
-- Risk factor correlation
-- Alert effectiveness
-- Resource utilization
-- User engagement metrics
-- System performance monitoring
-- Prediction accuracy tracking
-
-## 🔧 Development
-
-### Project Structure
-```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # Basic UI elements
-│   ├── layout/         # Layout components
-│   ├── dashboard/      # Dashboard-specific components
-│   ├── water-quality/  # Water quality components
-│   └── predictions/    # AI prediction components
-├── contexts/           # React contexts
-├── hooks/              # Custom React hooks
-├── lib/                # Utility functions
-├── pages/              # Page components
-├── types/              # TypeScript type definitions
-└── assets/             # Static assets
-```
-
-### Key Commands
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run lint         # Run ESLint
-npm run preview      # Preview production build
-```
-
-### Available Pages
-- `/` - Main dashboard with overview and risk map
-- `/villages` - Village management and risk assessment
-- `/health-reports` - Health data entry and reporting
-- `/water-quality` - Water source testing and monitoring
-- `/alerts` - Alert management and acknowledgment
-- `/predictions` - AI-powered outbreak predictions
-- `/resources` - Resource planning and deployment
-- `/mobile` - Mobile app interface simulation
-
-## 🤝 Contributing
-
-This system is designed to be easily extensible. Key areas for contribution:
-- Additional language translations
-- Enhanced ML prediction models
-- Mobile app development
-- IoT sensor integration
-- Advanced analytics features
-- Real-time communication features
-- Integration with existing health systems
-
-## 🚀 Deployment Options
-
-### Cloud Deployment
-- **AWS**: EC2, RDS, S3 for scalable deployment
-- **Google Cloud**: App Engine, Cloud SQL, Cloud Storage
-- **Azure**: App Service, Azure Database, Blob Storage
-
-### On-Premise Deployment
-- Docker containerization for easy deployment
-- Kubernetes orchestration for high availability
-- Local database setup with PostgreSQL/PostGIS
-
-## 📊 Performance Metrics
-
-### System Capabilities
-- **Scalability**: Designed to handle 1000+ villages
-- **Response Time**: <2 seconds for dashboard loading
-- **Offline Support**: 7-day offline operation capability
-- **Data Sync**: Real-time synchronization with <30 second latency
-- **Prediction Accuracy**: 85%+ accuracy for 7-day forecasts
-
-## 📄 License
-
-This project is designed for public health benefit and can be adapted for use by health departments and NGOs working in rural health monitoring.
+A comprehensive Smart Community Health Monitoring System designed for rural Northeast India. AarogyaJal detects, predicts, and alerts about potential water-borne disease outbreaks using a deterministic risk engine and real-time community health data.
 
 ---
 
-**Built for Public Health** 🏥 | **Powered by AI** 🤖 | **Community First** 👥 | **Offline-Ready** 📱
+## 🚀 Key Features
+
+### 1. Decision Intelligence Dashboard
+- **Real-time Risk Heatmap**: Visualizes village risk levels (Low/Medium/High) using color-coded metrics.
+- **AI-Driven Insights**: Automated text summarization of daily health anomalies (e.g., "Water quality is the primary driver for [Village]").
+- **Action Queue**: Prioritized list of recommended actions for health officials.
+- **Silent Village Detection**: Automatically flags villages that haven't reported data in > 48 hours for accountability.
+
+### 2. Mobile-First Field Surveillance
+- **ASHA Worker Optimized**: The interface transforms into a touch-friendly app on mobile devices.
+- **Responsive Navigation**: Slide-over drawer and hamburger menus for smaller screens.
+- **Offline-Ready UI**: Skeleton loaders and clean states designed for low-connectivity environments.
+
+### 3. Comprehensive Data Management
+- **Health Reporting**: Digital forms for logging daily symptoms (fever, diarrhea, vomiting, dehydration).
+- **Water Quality Monitoring**: Forms to log pH, turbidity, chlorine, and bacterial presence.
+- **Instant Validation**: Immediate visual feedback on unsafe water parameters during data entry.
+
+### 4. Deterministic AI Risk Engine
+*Located in `src/lib/riskEngine.ts`*
+The system uses a transparent, explainable algorithm to calculate outbreak probability in the browser:
+- **Water Quality (45%)**: Weighted score based on WHO safety standards (e.g., Bacterial Presence = Critical Risk).
+- **Symptom Trends (35%)**: Analyzes the ratio of specific enteric symptoms to total cases.
+- **Seasonality (20%)**: Adjusts risk based on historical monsoon data.
+
+### 5. UI/UX Consistency & Design System
+- **Unified Design**: Standardized colors (Teal/Blue/Red/Yellow), typography (Inter), and layout across all pages.
+- **Components**: Reusable `PageHeader`, `Card`, `Button`, and `Badge` components ensure visual consistency.
+- **Multilingual Support**: Full toggle support for English and Assamese (অসমীয়া), persisting user preference across sessions.
+
+### 6. Interactive Settings & Configuration
+- **Profile Management**: Manage user details (mocked).
+- **Notification Preferences**: Granular control over Email, SMS, and Push notifications.
+- **Security**: 2FA and password management settings.
+- **System Preferences**: Data retention and auto-sync intervals.
+
+---
+
+## 🏗️ System Architecture
+
+### Frontend Layer
+- **React 18**: Component-based UI architecture.
+- **TypeScript**: Strict type safety for all data models.
+- **Tailwind CSS**: Utility-first styling with a consistent, professional healthcare design system.
+- **Context API**: Global state for Language (`LanguageProvider`) and Mobile Layout (`LayoutProvider`).
+- **Routing**: `react-router-dom` for seamless navigation (including `/settings`).
+
+### Logic Layer (Simulated Backend)
+- **`useMockData` Hook**: Acts as a client-side database wrapper.
+- **Dynamic Logic**: Recalculates risk scores and stats in real-time.
+- **State Management**: Data flows from Forms -> Hook -> Risk Engine -> Dashboard.
+
+### Data Models
+The system mimics a robust SQL schema:
+- `Village`: Geographic & demographic data.
+- `HealthReport`: Daily symptom logs.
+- `WaterQualityReport`: Lab or field test results.
+- `Prediction`: Calculated risk scores and factors.
+
+---
+
+## 📱 User Flow Scenarios
+
+### Scenario A: The Warning Sign
+1. **Field Worker** logs in on a mobile phone.
+2. She submits a **Water Quality Report** for "Majuli" indicating **Bacterial Presence**.
+3. The system immediately flags this report as unsafe.
+
+### Scenario B: The Response
+1. **Health Official** checks the **Dashboard**.
+2. They see a **"High Risk"** alert for Majuli.
+3. The **Health Intelligence** summary explains: *"Water quality contamination is the primary risk driver."*
+4. The **Action Queue** suggests: *"Deploy containment team to Majuli."*
+
+---
+
+## 🛠️ Technology Stack
+
+- **Core**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Lucide Icons
+- **Visualization**: Recharts (Trends), Leaflet (Maps)
+- **Forms**: React State & Validation
+- **Routing**: React Router DOM
+
+---
+
+## 🏃 Getting Started
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+3. **Explore the System**
+   - Use the **Dashboard** to see the big picture.
+   - Use **Health Reports** or **Water Quality** to input new data and watch the AI logic update the risk scores in real-time.
+
+---
+
+**Built for Public Health** 🏥 | **Powered by Logic** 🧠 | **Community First** 👥

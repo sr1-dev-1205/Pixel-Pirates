@@ -6,16 +6,24 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import Badge from '../components/ui/Badge';
 import { getRiskLevelColor, formatDateTime } from '../lib/utils';
 
+import Skeleton from '../components/ui/Skeleton';
+import PageHeader from '../components/layout/PageHeader';
+
 const Villages: React.FC = () => {
   const { t } = useLanguage();
   const { villages, loading } = useMockData();
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+      <div className="flex-1 overflow-auto p-6">
+        <div className="mb-6">
+          <Skeleton className="h-10 w-48 mb-2" />
+          <Skeleton className="h-5 w-72" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-64 rounded-xl" />
+          ))}
         </div>
       </div>
     );
@@ -24,12 +32,10 @@ const Villages: React.FC = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{t('villages')}</h1>
-          <p className="text-gray-600 mt-1">
-            Monitor health status across all villages
-          </p>
-        </div>
+        <PageHeader
+          title={t('villages')}
+          subtitle="Monitor health status across all villages"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {villages.map((village) => (
@@ -40,7 +46,7 @@ const Villages: React.FC = () => {
                   <Badge
                     variant={
                       village.risk_level === 'high' ? 'danger' :
-                      village.risk_level === 'medium' ? 'warning' : 'success'
+                        village.risk_level === 'medium' ? 'warning' : 'success'
                     }
                   >
                     {village.risk_level} risk
@@ -53,12 +59,12 @@ const Villages: React.FC = () => {
                     <MapPin className="w-4 h-4" />
                     <span>{village.district} District</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Users className="w-4 h-4" />
                     <span>{village.population.toLocaleString()} residents</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Clock className="w-4 h-4" />
                     <span>Updated {formatDateTime(village.last_updated)}</span>
@@ -78,13 +84,13 @@ const Villages: React.FC = () => {
                       <span className="font-medium">Risk Level</span>
                       <span className="text-sm">
                         {village.risk_level === 'high' ? '🔴' :
-                         village.risk_level === 'medium' ? '🟡' : '🟢'}
+                          village.risk_level === 'medium' ? '🟡' : '🟢'}
                       </span>
                     </div>
                     <p className="text-xs mt-1">
                       {village.risk_level === 'high' ? 'Immediate attention required' :
-                       village.risk_level === 'medium' ? 'Monitor closely' :
-                       'Situation normal'}
+                        village.risk_level === 'medium' ? 'Monitor closely' :
+                          'Situation normal'}
                     </p>
                   </div>
                 </div>

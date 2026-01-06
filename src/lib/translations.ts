@@ -1,111 +1,142 @@
-export const translations = {
+export type Language = 'en' | 'as';
+
+export type TranslationKey =
+  | 'dashboard'
+  | 'villages'
+  | 'healthReports'
+  | 'waterQuality'
+  | 'predictions'
+  | 'resources'
+  | 'settings'
+  | 'loading'
+  | 'totalVillages'
+  | 'reportsToday'
+  | 'highRiskVillages'
+  | 'activeAlerts'
+  | 'casesThisWeek'
+  | 'addReport'
+  | 'riskLevel'
+  | 'date'
+  | 'actions'
+  | 'viewDetails'
+  | 'submit'
+  | 'cancel'
+  | 'language'
+  | 'theme'
+  | 'profile'
+  | 'notifications'
+  | 'logout'
+  | 'welcome'
+  | 'healthIntelligence'
+  | 'recommendedActions'
+  | 'silentVillages'
+  | 'todaysInsights'
+  | 'recentAlerts'
+  | 'riskMap'
+  | 'search'
+  | 'filter'
+  | 'status'
+  | 'trend'
+  | 'safe'
+  | 'unsafe'
+  | 'caution'
+  | 'monitor'
+  | 'deployTeam'
+  | 'acknowledge'
+  | 'alerts'
+  | 'resolved';
+
+export const translations: Record<Language, Record<TranslationKey, string>> = {
   en: {
-    // Navigation
     dashboard: 'Dashboard',
     villages: 'Villages',
     healthReports: 'Health Reports',
     waterQuality: 'Water Quality',
-    alerts: 'Alerts',
     predictions: 'AI Predictions',
+    resources: 'Resources',
     settings: 'Settings',
-    
-    // Dashboard
+    loading: 'Loading system data...',
     totalVillages: 'Total Villages',
     reportsToday: 'Reports Today',
     highRiskVillages: 'High Risk Villages',
     activeAlerts: 'Active Alerts',
     casesThisWeek: 'Cases This Week',
-    
-    // Risk Levels
-    low: 'Low Risk',
-    medium: 'Medium Risk',
-    high: 'High Risk',
-    critical: 'Critical',
-    
-    // Common
-    loading: 'Loading...',
-    error: 'Error',
-    save: 'Save',
-    cancel: 'Cancel',
+    addReport: 'Add Report',
+    riskLevel: 'Risk Level',
+    date: 'Date',
+    actions: 'Actions',
+    viewDetails: 'View Details',
     submit: 'Submit',
-    delete: 'Delete',
-    edit: 'Edit',
-    view: 'View',
-    
-    // Health Reports
-    symptoms: 'Symptoms',
-    diarrhea: 'Diarrhea Cases',
-    fever: 'Fever Cases',
-    vomiting: 'Vomiting Cases',
-    dehydration: 'Dehydration Cases',
-    totalCases: 'Total Cases',
-    
-    // Water Quality
-    phLevel: 'pH Level',
-    turbidity: 'Turbidity',
-    chlorineLevel: 'Chlorine Level',
-    bacterialPresence: 'Bacterial Presence',
-    sourceType: 'Water Source Type',
-    
-    // Alerts
-    outbreakRisk: 'Outbreak Risk Alert',
-    waterContamination: 'Water Contamination Alert',
-    resourceShortage: 'Resource Shortage Alert',
+    cancel: 'Cancel',
+    language: 'Language',
+    theme: 'Theme',
+    profile: 'Profile',
+    notifications: 'Notifications',
+    logout: 'Logout',
+    welcome: 'Welcome to AarogyaJal',
+    healthIntelligence: 'Health Intelligence',
+    recommendedActions: 'Recommended Actions',
+    silentVillages: 'Silent Villages',
+    todaysInsights: "Today's Insights",
+    recentAlerts: 'Recent Alerts',
+    riskMap: 'Risk Heatmap',
+    search: 'Search...',
+    filter: 'Filter',
+    status: 'Status',
+    trend: 'Trend',
+    safe: 'Safe',
+    unsafe: 'Unsafe',
+    caution: 'Caution',
+    monitor: 'Monitor',
+    deployTeam: 'Deploy Team',
+    acknowledge: 'Acknowledge',
+    resolved: 'Resolved',
+    alerts: 'Alerts'
   },
   as: {
-    // Navigation (Assamese)
-    dashboard: 'ড্যাশবৰ্ড',
-    villages: 'গাঁও সমূহ',
+    dashboard: 'ডেশবোর্ড',
+    villages: 'গাওঁসমূহ',
     healthReports: 'স্বাস্থ্য প্ৰতিবেদন',
-    waterQuality: 'পানীৰ গুণগত মান',
-    alerts: 'সতৰ্কবাণী',
-    predictions: 'AI পূৰ্বাভাস',
-    settings: 'সংহতি',
-    
-    // Dashboard
-    totalVillages: 'মুঠ গাঁও',
-    reportsToday: 'আজিৰ প্ৰতিবেদন',
-    highRiskVillages: 'উচ্চ বিপদাপন্ন গাঁও',
-    activeAlerts: 'সক্ৰিয় সতৰ্কবাণী',
-    casesThisWeek: 'এই সপ্তাহৰ কেচ',
-    
-    // Risk Levels
-    low: 'কম বিপদ',
-    medium: 'মধ্যম বিপদ',
-    high: 'উচ্চ বিপদ',
-    critical: 'গুৰুতৰ',
-    
-    // Common
-    loading: 'ল\'ড হৈ আছে...',
-    error: 'ত্ৰুটি',
-    save: 'সংৰক্ষণ কৰক',
-    cancel: 'বাতিল কৰক',
+    waterQuality: 'পানীৰ গুণমান',
+    predictions: 'AI ভৱিষ্যদ্বাণী',
+    resources: 'সম্পদ',
+    loading: 'তথ্য লোড হৈ আছে...',
+    settings: 'চেটিংছ',
+    totalVillages: 'মুঠ গাওঁ',
+    reportsToday: 'আজির প্ৰতিবেদন',
+    highRiskVillages: 'উচ্চ বিপদের গাওঁ',
+    activeAlerts: 'সক্ৰিয় সতৰ্কতা',
+    casesThisWeek: 'এই সপ্তাহৰ ৰোগী',
+    addReport: 'প্ৰতিবেদন যোগ কৰক',
+    riskLevel: 'বিপদৰ স্তৰ',
+    date: 'তাৰিখ',
+    actions: 'কাৰ্য',
+    viewDetails: 'বিৱৰণ চাওক',
     submit: 'দাখিল কৰক',
-    delete: 'মচি দিয়ক',
-    edit: 'সম্পাদনা',
-    view: 'চাওক',
-    
-    // Health Reports
-    symptoms: 'লক্ষণ সমূহ',
-    diarrhea: 'ডায়েৰিয়া কেচ',
-    fever: 'জ্বৰ কেচ',
-    vomiting: 'বমি কেচ',
-    dehydration: 'পানীশূন্যতা কেচ',
-    totalCases: 'মুঠ কেচ',
-    
-    // Water Quality
-    phLevel: 'pH স্তৰ',
-    turbidity: 'ঘোলা ভাব',
-    chlorineLevel: 'ক্লৰিন স্তৰ',
-    bacterialPresence: 'বেক্টেৰিয়াৰ উপস্থিতি',
-    sourceType: 'পানীৰ উৎসৰ প্ৰকাৰ',
-    
-    // Alerts
-    outbreakRisk: 'প্ৰাদুৰ্ভাৱ বিপদ সতৰ্কবাণী',
-    waterContamination: 'পানী দূষণ সতৰ্কবাণী',
-    resourceShortage: 'সম্পদৰ অভাৱ সতৰ্কবাণী',
-  },
+    cancel: 'বাতিল কৰক',
+    language: 'ভাষা',
+    theme: 'থিম',
+    profile: 'প্ৰফাইল',
+    notifications: 'জাননী',
+    logout: 'প্ৰস্থান',
+    welcome: 'আৰোগ্যজললৈ স্বাগতম',
+    healthIntelligence: 'স্বাস্থ্য বুদ্ধিমত্তা',
+    recommendedActions: 'পৰামৰ্শকৃত পদক্ষেপ',
+    silentVillages: 'নিৰৱ গাওঁসমূহ',
+    todaysInsights: 'আজির অন্তর্দৃষ্টি',
+    recentAlerts: 'শেহতীয়া সতৰ্কতা',
+    riskMap: 'বিপদৰ মানচিত্ৰ',
+    search: 'সন্ধান কৰক...',
+    filter: 'ফিল্টাৰ',
+    status: 'স্থিতি',
+    trend: 'প্ৰৱণতা',
+    safe: 'সুৰক্ষিত',
+    unsafe: 'অসুৰক্ষিত',
+    caution: 'সাৱধান',
+    monitor: 'নিৰীক্ষণ',
+    deployTeam: 'দল প্ৰেৰণ কৰক',
+    acknowledge: 'স্বীকাৰ কৰক',
+    resolved: 'মীমাংসিত',
+    alerts: 'সতৰ্কতা'
+  }
 };
-
-export type Language = keyof typeof translations;
-export type TranslationKey = keyof typeof translations.en;
