@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AlertTriangle, Clock, CheckCircle, Bell, MapPin, Calendar, Filter } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { AlertTriangle, Clock, CheckCircle, Bell, MapPin, Calendar, Filter, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useMockData } from '../hooks/useMockData';
 import { Card, CardContent } from '../components/ui/Card';
@@ -8,12 +8,15 @@ import Badge from '../components/ui/Badge';
 import { formatDateTime } from '../lib/utils';
 import { Alert } from '../types';
 import PageHeader from '../components/layout/PageHeader';
+import { useDebounceValue } from '../lib/lazyLoad';
 
 const Alerts: React.FC = () => {
   const { t, language } = useLanguage();
   const { alerts, villages, acknowledgeAlert, loading } = useMockData();
   const [filter, setFilter] = useState<'all' | 'active' | 'acknowledged'>('all');
   const [severityFilter, setSeverityFilter] = useState<'all' | 'critical' | 'high' | 'medium' | 'low'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounceValue(searchTerm, 300);
 
   const getVillageName = (villageId: string) => {
     const village = villages.find(v => v.id === villageId);
@@ -53,12 +56,33 @@ const Alerts: React.FC = () => {
     }
   };
 
-  const filteredAlerts = alerts.filter(alert => {
-    if (filter === 'active' && alert.acknowledged) return false;
-    if (filter === 'acknowledged' && !alert.acknowledged) return false;
-    if (severityFilter !== 'all' && alert.severity !== severityFilter) return false;
-    return true;
-  });
+  // Memoized filtered alerts for performance
+  const filteredAlerts = useMemo(() => {
+    return alerts.filter(alert => {
+      // Status filter
+      if (filter === 'active' && alert.acknowledged) return false;
+      if (filter === 'acknowledged' && !alert.acknowledged) return false;
+      
+      // Severity filter
+      if (severityFilter !== 'all' && alert.severity !== severityFilter) return false;
+      
+      // Search filter
+      if (debouncedSearch) {
+        const searchLower = debouncedSearch.toLowerCase();
+        const villageName = getVillageName(alert.village_id).toLowerCase();
+        const message = (language === 'as' && alert.message_as) ? alert.message_as : alert.message;
+        const messageLower = message.toLowerCase();
+        
+        return (
+          villageName.includes(searchLower) ||
+          messageLower.includes(searchLower) ||
+          alert.alert_type.includes(searchLower)
+        );
+      }
+      
+      return true;
+    });
+  }, [alerts, filter, severityFilter, debouncedSearch, language, villages]);
 
   if (loading) {
     return (
@@ -141,42 +165,58 @@ const Alerts: React.FC = () => {
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center space-x-2">
-                <Filter className="w-4 h-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Filters:</span>
+            <div className="flex flex-col gap-4">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search alerts by village or message..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
 
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Status:</span>
-                <select
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value as any)}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Alerts</option>
-                  <option value="active">Active Only</option>
-                  <option value="acknowledged">Acknowledged Only</option>
-                </select>
-              </div>
+              {/* Filter Controls */}
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center space-x-2">
+                  <Filter className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">Filters:</span>
+                </div>
 
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Severity:</span>
-                <select
-                  value={severityFilter}
-                  onChange={(e) => setSeverityFilter(e.target.value as any)}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Severities</option>
-                  <option value="critical">Critical</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-              </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600">Status:</span>
+                  <select
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value as any)}
+                    className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Alerts</option>
+                    <option value="active">Active Only</option>
+                    <option value="acknowledged">Acknowledged Only</option>
+                  </select>
+                </div>
 
-              <div className="ml-auto text-sm text-gray-500">
-                Showing {filteredAlerts.length} of {alerts.length} alerts
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600">Severity:</span>
+                  <select
+                    value={severityFilter}
+                    onChange={(e) => setSeverityFilter(e.target.value as any)}
+                    className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Severities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+
+                <div className="ml-auto text-sm text-gray-500">
+                  Showing {filteredAlerts.length} of {alerts.length} alerts
+                  {debouncedSearch && ` (filtered from search)`}
+                </div>
               </div>
             </div>
           </CardContent>

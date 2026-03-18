@@ -2,9 +2,10 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   loading?: boolean;
+  fullWidth?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -13,33 +14,48 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   loading = false,
   disabled,
+  fullWidth = false,
   children,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+  const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-95';
   
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md',
+    secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 shadow-sm',
+    outline: 'border-2 border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50',
     ghost: 'text-gray-700 hover:bg-gray-100',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
+    danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm hover:shadow-md',
+    success: 'bg-green-600 text-white hover:bg-green-700 shadow-sm hover:shadow-md',
   };
 
   const sizes = {
-    sm: 'h-8 px-3 text-sm',
-    md: 'h-10 px-4 py-2',
-    lg: 'h-12 px-6 text-lg',
+    xs: 'h-7 px-2 text-xs sm:text-sm',
+    sm: 'h-9 px-3 text-sm sm:text-base',
+    md: 'h-10 px-4 py-2 text-sm sm:text-base',
+    lg: 'h-12 px-6 text-base sm:text-lg',
+    xl: 'h-14 px-8 text-lg sm:text-xl',
   };
 
   return (
     <button
-      className={cn(baseStyles, variants[variant], sizes[size], className)}
+      className={cn(
+        baseStyles, 
+        variants[variant], 
+        sizes[size],
+        fullWidth ? 'w-full' : '',
+        className
+      )}
       disabled={disabled || loading}
       {...props}
     >
       {loading && (
-        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+        <svg 
+          className="animate-spin mr-2 h-4 w-4" 
+          fill="none" 
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
           <circle
             className="opacity-25"
             cx="12"

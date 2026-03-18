@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { User, Bell, Shield, Database, Download, Save } from 'lucide-react';
+import { User, Bell, Shield, Database, Download, Save, Upload, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import PageHeader from '../components/layout/PageHeader';
 import toast from 'react-hot-toast';
+import { useMockData } from '../hooks/useMockData';
 
 const Settings: React.FC = () => {
     const { language, setLanguage, t } = useLanguage();
+    const { exportData, importData, clearAllData } = useMockData();
     const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'security' | 'system'>('profile');
     const [settings, setSettings] = useState({
         emailNotifications: true,
@@ -18,6 +20,7 @@ const Settings: React.FC = () => {
         autoSync: true,
         dataRetention: '1year',
     });
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const handleSettingChange = (key: string, value: boolean | string) => {
         setSettings(prev => ({ ...prev, [key]: value }));
@@ -25,6 +28,24 @@ const Settings: React.FC = () => {
 
     const handleSave = () => {
         toast.success('Settings saved successfully');
+    };
+
+    const handleExportData = () => {
+        exportData();
+    };
+
+    const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            importData(file);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    const handleClearData = () => {
+        clearAllData();
     };
 
     return (
@@ -282,19 +303,47 @@ const Settings: React.FC = () => {
                                         </div>
 
                                         <div className="p-4 bg-gray-50 rounded-lg">
-                                            <h4 className="font-medium text-gray-900 mb-2">Data Export</h4>
+                                            <h4 className="font-medium text-gray-900 mb-2">Data Management</h4>
                                             <p className="text-sm text-gray-600 mb-4">
-                                                Download your data locally for analysis or backup.
+                                                Export, import, or clear your data.
                                             </p>
-                                            <div className="flex space-x-3">
-                                                <Button variant="outline" size="sm">
+                                            <div className="flex flex-col sm:flex-row gap-3">
+                                                <Button 
+                                                    variant="outline" 
+                                                    size="sm"
+                                                    onClick={handleExportData}
+                                                >
                                                     <Download className="w-4 h-4 mr-2" />
-                                                    Reports (CSV)
+                                                    Export Data
                                                 </Button>
-                                                <Button variant="outline" size="sm">
-                                                    <Download className="w-4 h-4 mr-2" />
-                                                    Full Backup (JSON)
+                                                <Button 
+                                                    variant="outline" 
+                                                    size="sm"
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                >
+                                                    <Upload className="w-4 h-4 mr-2" />
+                                                    Import Data
                                                 </Button>
+                                                <input
+                                                    ref={fileInputRef}
+                                                    type="file"
+                                                    accept=".json"
+                                                    onChange={handleImportData}
+                                                    className="hidden"
+                                                />
+                                            </div>
+                                            <div className="mt-4 pt-4 border-t">
+                                                <Button 
+                                                    variant="danger" 
+                                                    size="sm"
+                                                    onClick={handleClearData}
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                    Clear All Data
+                                                </Button>
+                                                <p className="text-xs text-red-600 mt-2">
+                                                    Warning: This will delete all stored data permanently.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Village, HealthReport, WaterQualityReport, Alert, PredictionData, DashboardStats } from '../types';
 import { calculateVillageRisk } from '../lib/riskEngine';
+import { DataPersistence } from '../lib/dataPersistence';
+import toast from 'react-hot-toast';
 
 // Mock data generation (keep initial generators for seeding data)
 const generateMockVillages = (): Village[] => [
@@ -213,25 +215,56 @@ export function useMockData() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Load data from localStorage or generate initial data
+  const loadData = useCallback(async () => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Try to load from localStorage first
+      const storedVillages = DataPersistence.getVillages();
+      const storedHealthReports = DataPersistence.getHealthReports();
+      const storedWaterReports = DataPersistence.getWaterReports();
+      const storedAlerts = DataPersistence.getAlerts();
+
+      if (storedVillages.length > 0) {
+        setVillages(storedVillages);
+        setHealthReports(storedHealthReports);
+        setWaterReports(storedWaterReports);
+        setAlerts(storedAlerts);
+        console.log('✓ Data loaded from localStorage');
+      } else {
+        // Generate initial mock data if nothing in storage
+        const mockVillages = generateMockVillages();
+        const mockHealthReports = generateMockHealthReports();
+        const mockWaterReports = generateMockWaterReports();
+        const mockAlerts = generateMockAlerts();
+
+        setVillages(mockVillages);
+        setHealthReports(mockHealthReports);
+        setWaterReports(mockWaterReports);
+        setAlerts(mockAlerts);
+        
+        // Save to localStorage
+        DataPersistence.setVillages(mockVillages);
+        DataPersistence.setHealthReports(mockHealthReports);
+        DataPersistence.setWaterReports(mockWaterReports);
+        DataPersistence.setAlerts(mockAlerts);
+        
+        console.log('✓ Initial data generated and saved to localStorage');
+      }
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast.error('Failed to load data');
+      setLoading(false);
+    }
+  }, []);
+
   // Initial Data Load
   useEffect(() => {
-    const loadData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate simplified network delay
-
-      const mockVillages = generateMockVillages();
-      const mockHealthReports = generateMockHealthReports();
-      const mockWaterReports = generateMockWaterReports();
-      const mockAlerts = generateMockAlerts();
-
-      setVillages(mockVillages);
-      setHealthReports(mockHealthReports);
-      setWaterReports(mockWaterReports);
-      setAlerts(mockAlerts);
-      setLoading(false);
-    };
-
     loadData();
-  }, []);
+  }, [loadData]);
 
   // Recalculate predictions and stats whenever data changes
   useEffect(() => {
@@ -307,27 +340,84 @@ export function useMockData() {
     predictions,
     dashboardStats,
     loading,
-    // Helper functions for adding new data
+    refreshData: loadData,
+    // Helper functions for adding new data with persistence
     addHealthReport: (report: Omit<HealthReport, 'id' | 'created_at'>) => {
       const newReport: HealthReport = {
         ...report,
         id: Date.now().toString(),
         created_at: new Date().toISOString(),
       };
-      setHealthReports(prev => [newReport, ...prev]);
+      setHealthReports(prev => {
+        const updated = [newReport, ...prev];
+        DataPersistence.setHealthReports(updated);
+        return updated;
+      });
+      toast.success('Health report saved successfully');
     },
     acknowledgeAlert: (alertId: string) => {
-      setAlerts(prev => prev.map(alert =>
-        alert.id === alertId ? { ...alert, acknowledged: true } : alert
-      ));
+      setAlerts(prev => {
+        const updated = prev.map(alert =>
+          alert.id === alertId ? { 
+            ...alert, 
+            acknowledged: true,
+            acknowledged_by: 'current_user',
+            acknowledged_at: new Date().toISOString(),
+          } : alert
+        );
+        DataPersistence.setAlerts(updated);
+        toast.success('Alert acknowledged');
+        return updated;
+      });
     },
     addWaterReport: (report: Omit<WaterQualityReport, 'id' | 'created_at'>) => {
       const newReport: WaterQualityReport = {
         ...report,
         id: Date.now().toString(),
         created_at: new Date().toISOString(),
+      };      setWaterReports(prev => {
+        const updated = [newReport, ...prev];
+        DataPersistence.setWaterReports(updated);
+        return updated;
+      });
+      toast.success('Water quality report saved successfully');
+    },
+    exportData: () => {
+      const data = DataPersistence.exportAllData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `aarogya_jal_backup_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success('Data exported successfully');
+    },
+    importData: (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target?.result as string);
+          if (DataPersistence.importAllData(data)) {
+            loadData();
+            toast.success('Data imported successfully');
+          } else {
+            toast.error('Failed to import data');
+          }
+        } catch (error) {
+          toast.error('Invalid data file');
+        }
       };
-      setWaterReports(prev => [newReport, ...prev]);
+      reader.readAsText(file);
+    },
+    clearAllData: () => {
+      if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+        DataPersistence.clear();
+        loadData();
+        toast.success('All data cleared');
+      }
     },
   };
 }
